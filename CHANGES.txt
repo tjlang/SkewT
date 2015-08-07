@@ -1,3 +1,5 @@
+TJL 7 August 2015 — Made code able to run under Python 2.7 or 3.4. Also applied pep8.
+
 v1.1.0 18 June 2015 -- Oh gosh, where to begin?
     - Bugs in CAPE calculations: were mixing ambient temperature-derived 
       significant levels with virtual temperature formulation for CAPE, 
