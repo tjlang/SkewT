@@ -328,7 +328,7 @@ class Sounding(UserDict):
         nbarbs = (~uu.mask).sum()
 
         skip = max(1, int(nbarbs//32))
-
+ 
         if 'color' in kwargs:
             bcol = kwargs['color']
         else:
@@ -347,11 +347,15 @@ class Sounding(UserDict):
 
         return tcprof
 
-    def make_skewt_axes(self, pmax=1050., pmin=100., tmin=-40., tmax=30.):
+    def make_skewt_axes(self, pmax=1050., pmin=100., tmin=-40., tmax=30.,
+                        fig=None):
         """Set up the skew-t axis the way I like to see it"""
 
-        self.fig = figure(figsize=(8, 8))
-        self.fig.clf()
+        if fig is None:
+            self.fig = figure(figsize=(8, 8))
+            self.fig.clf()
+        else:
+            self.fig = fig
 
         rcParams.update({'font.size': 10, })
 
