@@ -205,7 +205,7 @@ the parcel type you want (default is ``'mu'``)::
     In [2]: parcel=S.get_parcel('mu',depth=300)
     In [3]: parcel
     Out[3]: (1000.0, 23.037, 13.626, 'mu')
-    In [4]: S.lift_parcel(*parcel_2)
+    In [4]: S.lift_parcel(*parcel)
 
 Or, you can define your own parcel (the fourth item is just some text which 
 appears on the Skew-T diagram)::
