@@ -1,3 +1,9 @@
+NOTE: This is a Python 3 compliant fork of the original SkewT!!!
+
+Current version is 1.2.0, dated 28 November 2017. See CHANGES.txt.
+
+Below is previous information, prior to Python 3 fork.
+
 ======================================================
 SkewT -- Atmospheric Profile Plotting and Diagnostics
 ======================================================

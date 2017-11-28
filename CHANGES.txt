@@ -1,3 +1,10 @@
+TJL v1.2.0 28 Nov 2017
+    - Fixed matplotlib version check that was causing plotting issues
+      under matplotlib v2.
+    - Fixed ability of Sounding.plot_skewt to take fig, dpi, tmin,
+      and tmax, keywords
+    - Incorporated community-provided updates with pep8 adjustments.
+
 TJL 7 August 2015 — Made code able to run under Python 2.7 or 3.4. Also applied pep8.
 
 v1.1.0 18 June 2015 -- Oh gosh, where to begin?
@@ -14,7 +21,6 @@ v1.0.1 Minor bug fix to suppress runtime warnings when P_lfc was nan
 v1.0 10 October 2014 Major overhaul to implement new matplotlib 
 transformations and CAPE routines.
 
-    
 v0.1.4r4 02 Sep 2014 --Fixed examples
 
 v0.1.4r3 02 Sep 2014 --Fixed base of standard atmosphere.
@@ -77,8 +83,3 @@ v0.1.2 08 July 2013 -- A number of changes:
 v0.1.1 03 July 2013 -- Very minor changes to docs and figure plotting.
 
 v0.1.0 01 July 2013 -- Initial Release!
-
-    
-
-
-
