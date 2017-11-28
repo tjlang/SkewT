@@ -72,6 +72,9 @@ class SkewXAxes(SkewXAxes):
 
         # self.set_ylabel('Pressure (hPa)')
         self.set_xlabel('Temperature (C)')
+        #explicitly set Y-coord as otherwise "posx and posy should 
+        #be finite values" error occurs
+        self.xaxis.set_label_coords(0.5,-0.05)
         yticks = linspace(100, 1000, 10)
         if self.pmin < 100:
             yticks = concatenate((array([50, 20, 10]), yticks))
@@ -256,11 +259,10 @@ class Sounding(UserDict):
             self.lift_parcel(*parcel)
         self.column_diagnostics()
 
-        if isinstance(title, str):
+        if(title):
             self.skewxaxis.set_title(title)
         else:
-            self.skewxaxis.set_title("%s %s" % (self["StationNumber"],
-                                     self['SoundingDate']))
+            self.skewxaxis.set_title("%s %s"%(self["StationNumber"],self['SoundingDate']))
 
         if imagename is not None:
             print("saving figure")
@@ -322,7 +324,7 @@ class Sounding(UserDict):
             vv = ma.masked_array(zeros(pres.shape), mask=True)
 
         tcprof = self.skewxaxis.plot(tc, pres, zorder=5, **kwargs)
-        dpprof = self.skewxaxis.plot(dwpt, pres, zorder=5, **kwargs)
+        dpprof = self.skewxaxis.plot(dwpt, pres, zorder=5, ls='--', **kwargs)
 
         # this line should no longer cause an exception
         nbarbs = (~uu.mask).sum()
@@ -455,8 +457,13 @@ class Sounding(UserDict):
         # -------------------------------------------------------------------
         # This *should* be a convenient way to read a uwyo sounding
         # -------------------------------------------------------------------
-        fid = open(fname)
-        lines = fid.readlines()
+        try:
+            #See if it is already a file-like object
+            lines=fname.readlines()
+        except AttributeError:
+            #assume it is a filename
+            fid=open(fname)
+            lines=fid.readlines()
 
         # New: handle whitespace at top of file if present
         while not lines[0].strip():
