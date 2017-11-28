@@ -35,11 +35,11 @@ except ImportError:
 
 mpl_version = str(matplotlib.__version__)
 mpl_version_digits = [int(ss) for ss in mpl_version.split('.')]
-assert mpl_version_digits[0] >= 1, "Requires matplotlib version>1.0.0"
+assert mpl_version_digits[0] >= 1, "Requires matplotlib version > 1.0.0"
 
-if mpl_version_digits[1] < 4:
+if mpl_version_digits[0] == 1 and mpl_version_digits[1] < 4:
     # Thanks Ryan May for providing the original (and presumably, the current)
-    # implementation of the SkewX preojections
+    # implementation of the SkewX projections
     try:
         from .skewx_projection_matplotlib_lt_1d4 import SkewXAxes
     except:
@@ -54,7 +54,7 @@ else:
         from skewx_projection import SkewXAxes
 
 # SkewT version
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 
 class SkewXAxes(SkewXAxes):
@@ -72,9 +72,9 @@ class SkewXAxes(SkewXAxes):
 
         # self.set_ylabel('Pressure (hPa)')
         self.set_xlabel('Temperature (C)')
-        #explicitly set Y-coord as otherwise "posx and posy should 
-        #be finite values" error occurs
-        self.xaxis.set_label_coords(0.5,-0.05)
+        # explicitly set Y-coord as otherwise "posx and posy should
+        # be finite values" error occurs
+        self.xaxis.set_label_coords(0.5, -0.05)
         yticks = linspace(100, 1000, 10)
         if self.pmin < 100:
             yticks = concatenate((array([50, 20, 10]), yticks))
@@ -249,10 +249,11 @@ class Sounding(UserDict):
                     self['SoundingDate'] = '(No Date)'
 
     def plot_skewt(self, pmax=1050., pmin=100., parcel_type='most_unstable',
-                   imagename=None, title=None, **kwargs):
+                   imagename=None, title=None, tmin=-40., tmax=30., fig=None,
+                   dpi=300, **kwargs):
         """A wrapper for plotting the skewt diagram for a Sounding instance."""
 
-        self.make_skewt_axes(pmax, pmin)
+        self.make_skewt_axes(pmax, pmin, tmin, tmax, fig)
         self.add_profile(**kwargs)
         if parcel_type is not None:
             parcel = self.get_parcel(parcel_type)
@@ -262,11 +263,12 @@ class Sounding(UserDict):
         if(title):
             self.skewxaxis.set_title(title)
         else:
-            self.skewxaxis.set_title("%s %s"%(self["StationNumber"],self['SoundingDate']))
+            self.skewxaxis.set_title(
+                "%s %s" % (self["StationNumber"], self['SoundingDate']))
 
         if imagename is not None:
             print("saving figure")
-            self.fig.savefig(imagename, dpi=100)
+            self.fig.savefig(imagename, dpi=dpi)
 
     def add_profile(self, **kwargs):
         """Add a new profile to the SkewT plot.
@@ -275,7 +277,7 @@ class Sounding(UserDict):
         multiple profiles on a single axis, by updating the data attribute.
         For example:
         >>>
-        S=SkewT.Sounding(soundingdata={})
+        S = SkewT.Sounding(soundingdata={})
         S.make_skewt_axes()
         S.uwyofile("../examples/94975.2013062800.txt")
         S.add_profile(color="b",bloc=0.5)
@@ -330,7 +332,7 @@ class Sounding(UserDict):
         nbarbs = (~uu.mask).sum()
 
         skip = max(1, int(nbarbs//32))
- 
+
         if 'color' in kwargs:
             bcol = kwargs['color']
         else:
@@ -355,7 +357,7 @@ class Sounding(UserDict):
 
         if fig is None:
             self.fig = figure(figsize=(8, 8))
-            self.fig.clf()
+            # self.fig.clf()
         else:
             self.fig = fig
 
@@ -458,12 +460,12 @@ class Sounding(UserDict):
         # This *should* be a convenient way to read a uwyo sounding
         # -------------------------------------------------------------------
         try:
-            #See if it is already a file-like object
-            lines=fname.readlines()
+            # See if it is already a file-like object
+            lines = fname.readlines()
         except AttributeError:
-            #assume it is a filename
-            fid=open(fname)
-            lines=fid.readlines()
+            # assume it is a filename
+            fid = open(fname)
+            lines = fid.readlines()
 
         # New: handle whitespace at top of file if present
         while not lines[0].strip():
