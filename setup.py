@@ -5,7 +5,7 @@ setup(
     version='1.1.0',
     author='Thomas Chubb',
     author_email='thomas.chubb@monash.edu',
-    packages=['','skewt'],
+    packages=['', 'skewt'],
     scripts=[],
     url='http://pypi.python.org/pypi/SkewT/',
     license='LICENSE.txt',
