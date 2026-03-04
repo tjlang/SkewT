@@ -22,6 +22,44 @@ class SkewXTick(maxis.XTick):
     The sole purpose of this class is to look at the upper, lower, or total
     interval as appropriate and see what parts of the tick to draw, if any.
     """
+    
+    def __init__(self, *args, **kwargs):
+        """
+        Fixed __init__ to handle matplotlib >= 3.5 API changes.
+        Handles various call signatures robustly.
+        """
+        # Extract major from kwargs if present
+        major = kwargs.pop('major', True)
+        
+        # The parent expects: __init__(axes, loc, *, major=True, **kwargs)
+        # We need to ensure we pass exactly (axes, loc) as positional args
+        
+        if len(args) >= 2:
+            # Called with axes and loc (and possibly other stuff we should ignore)
+            axes, loc = args[0], args[1]
+            # Ignore any additional positional args (like the old '' label)
+        elif len(args) == 1:
+            # Only axes provided, use default loc
+            axes = args[0]
+            loc = 0
+        else:
+            raise TypeError(f"SkewXTick requires at least 1 argument (axes), got {len(args)}")
+        
+        # Call parent with clean signature
+        super().__init__(axes, loc, major=major, **kwargs)
+        
+        # For some reason in matplotlib 3.x, the parent __init__ may not 
+        # properly initialize these attributes when called from a custom projection.
+        # Ensure they exist as a safety measure:
+        if not hasattr(self, 'gridOn'):
+            # Get default values from the axis's tick keyword arguments
+            tick_kw = axes.xaxis._major_tick_kw if major else axes.xaxis._minor_tick_kw
+            self.gridOn = tick_kw.get('gridOn', False)
+            self.tick1On = tick_kw.get('tick1On', True)
+            self.tick2On = tick_kw.get('tick2On', True)
+            self.label1On = tick_kw.get('label1On', True)
+            self.label2On = tick_kw.get('label2On', True)
+    
     def draw(self, renderer):
         if not self.get_visible():
             return
@@ -49,7 +87,6 @@ class SkewXTick(maxis.XTick):
         renderer.close_group(self.__name__)
 
 
-
 class SkewXAxis(maxis.XAxis):
     """
     This class exists to provide two separate sets of intervals to the tick,
@@ -60,7 +97,11 @@ class SkewXAxis(maxis.XAxis):
         self.upper_interval = 0.0, 1.0
 
     def _get_tick(self, major):
-        return SkewXTick(self.axes, 0, '', major=major)
+        # OLD BROKEN WAY:
+        # return SkewXTick(self.axes, 0, '', major=major)
+        
+        # NEW CORRECT WAY - don't pass the empty label string:
+        return SkewXTick(self.axes, 0, major=major)
 
     @property
     def lower_interval(self):

@@ -8,6 +8,7 @@ SkewT.egg-info/PKG-INFO
 SkewT.egg-info/SOURCES.txt
 SkewT.egg-info/dependency_links.txt
 SkewT.egg-info/top_level.txt
+dist/SkewT-1.2.0-py3.8.egg
 skewt/SkewT.py
 skewt/__init__.py
 skewt/skewx_projection.py
