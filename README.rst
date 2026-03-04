@@ -78,14 +78,10 @@ There's more about this under the "Running SkewT" section below.
 
 Installing SkewT
 ================
-We recommend that you download the tarball (big green button on this page) 
-and run::
+We recommend that you clone the repository onto your machine (big green button on this page), 
+and run within the SkewT directory::
 
-    python setup.py install
-
-If you want to put it somewhere different than your system files, you can do::
-    
-    python setup.py install --prefix=/path/to/local/dir
+    pip install .
 
 Just remember, if you use a non-standard location you'll have to tell python 
 about where you install it. An easy way to do this is to add the environment 
