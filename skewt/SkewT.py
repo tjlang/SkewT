@@ -7,7 +7,7 @@ from matplotlib.ticker import (MultipleLocator, FixedLocator, AutoLocator,
                                ScalarFormatter)
 from matplotlib.pyplot import rcParams, figure, show, draw
 from numpy import (ma, array, linspace, logspace, log, cos, sin, pi, zeros,
-                   exp, arange, trapz, where, concatenate, nan, isnan, argsort,
+                   exp, arange, trapezoid, where, concatenate, nan, isnan, argsort,
                    log10, meshgrid)
 from datetime import datetime
 import os
@@ -584,7 +584,7 @@ class Sounding(UserDict):
         rho = DensHumid(tempk, prespa, vprespa)
 
         # Trapezoidal rule to approximate TPW (units kg/m^2==mm)
-        tpw = trapz(mixrkg*rho, hghtm)
+        tpw = trapezoid(mixrkg*rho, hghtm)
 
         return tpw
 
@@ -767,10 +767,10 @@ class Sounding(UserDict):
         # CIN=trapz(9.81*(Tv_parcel[cond2]-Tv_env[cond2])/\
         # Tv_env[cond2],hghtenv[cond2])
 
-        CAPE = trapz(
+        CAPE = trapezoid(
             9.81*(tparcel[cond1]-tempenv[cond1])/(tempenv[cond1] + 273.15),
             hghtenv[cond1])
-        CIN = trapz(
+        CIN = trapezoid(
             9.81*(tparcel[cond2]-tempenv[cond2])/(tempenv[cond2] + 273.15),
             hghtenv[cond2])
 
